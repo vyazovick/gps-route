@@ -71,7 +71,7 @@ $(document).ready(function () {
         fillOpacity: 0.8,
         map: map,
         center: parsedCoordinates[0],
-        radius: 15
+        radius: 30
       });
 
       route.startCircle = new google.maps.Circle({
