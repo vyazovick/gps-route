@@ -140,7 +140,7 @@ function initMap() {
 }
 
 function blurIntensity() {
-  return map.getZoom() * 1.3;
+  return map.getZoom() * 1.5;
 }
 
 function triggerBlurMap(toggle)
