@@ -106,26 +106,54 @@ $(document).ready(function () {
 
     $('#coordsList').val(exampleRouteCoordinates.join("\n"))
 });
+
 var map;
 var mapBounds;
 var infoWindow;
 var routesArray = [];
 var bluredMap = false;
+var waitLoadTilesForBlur = false;
+
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -34.397, lng: 150.644},
     zoom: 8
   });
+
+  google.maps.event.addListener(map, "maptypeid_changed", function() {
+    if( bluredMap ) {
+      $('#map .gm-style > div:nth-child(1) > div:nth-child(1)').css('filter', bluredMap ? "blur("+blurIntensity()+"px)" : 'none');
+      waitLoadTilesForBlur = true;
+    }
+  });
+
+  google.maps.event.addListener(map, "tilesloaded", function() {
+    if( waitLoadTilesForBlur ) {
+      $('#map .gm-style > div:nth-child(1) > div:nth-child(1)').css('filter', 'none');
+      triggerBlurMap(false);
+    }
+  });
+
+
   mapBounds = new google.maps.LatLngBounds();
   infoWindow = new google.maps.InfoWindow();
 }
 
-function toggleBlurMap()
+function blurIntensity() {
+  return map.getZoom() * 1.3;
+}
+
+function triggerBlurMap(toggle)
 {
-    bluredMap = !bluredMap;
+    toggle = (typeof toggle === 'undefined') ? true : toggle;
+
+    if( toggle ) {
+      bluredMap = !bluredMap;
+    }
+
     $('#map .gm-style > div:nth-child(1) > div:nth-child(1) div').filter(function () {
         return parseInt($(this).css("z-index")) == 0;
-    }).css('filter', bluredMap ? "blur(15px)" : 'none');
+    }).css('filter', bluredMap ? "blur("+blurIntensity()+"px)" : 'none');
 }
 
 function renderRoutesList()
