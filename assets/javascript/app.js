@@ -82,7 +82,7 @@ $(document).ready(function () {
         fillOpacity: 0.8,
         map: map,
         center: parsedCoordinates[parsedCoordinates.length - 1],
-        radius: 15
+        radius: 30
       });
 
       routesArray.push(route);
